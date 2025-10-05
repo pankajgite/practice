@@ -7,6 +7,11 @@ class MyThr extends Thread{
         while(i<50){
             System.out.println("I am a Thread");
             i++;
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException ex) {
+                System.out.println(ex);
+            }
         }
     }
 }
@@ -25,10 +30,17 @@ public class Thread_constructors {
     public static void main(String[] args) {
         MyThr th = new MyThr("Pankaj");
         th.start();
+        // try {
+        //     th.join();
+        // } catch (Exception e) {
+        //     System.out.println(e);
+        // }
         MyThrRun r1= new MyThrRun();
         Thread g1 = new Thread(r1,"Pankaj");
         g1.start();
-        g1.setPriority(Thread.MAX_PRIORITY);
+        // g1.setPriority(Thread.MAX_PRIORITY);
+        
+        
         System.out.println("Name of the Thread: "+th.getName());
         System.out.println("State of the Thread: "+th.getState());
         System.out.println("ID of the Thread: "+th.getId());
