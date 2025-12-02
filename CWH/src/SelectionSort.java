@@ -1,0 +1,35 @@
+import java.util.Arrays;
+
+public class SelectionSort {
+    // Renamed method to follow Java's camelCase convention.
+    // The method now modifies the array in-place, so it doesn't need to return it.
+    public static void selectionSort(int[] arr){
+        // The outer loop needs to go up to arr.length - 1.
+        for(int i=0;i<arr.length-1;i++){
+            // We only need to keep track of the index of the minimum element.
+            int min_index = i;
+            for(int j=i+1;j<arr.length;j++){
+                // Compare with the element at the current min_index.
+                if(arr[min_index]>arr[j]){
+                    min_index=j;
+                }
+            }
+            // Swap the found minimum element with the first element of the unsorted part.
+            int tmp=arr[min_index];
+            arr[min_index]=arr[i];
+            arr[i]=tmp;
+        }
+    }
+    public static void main(String[] args) {
+        int[] arr1 = {13,46,24,52,20,9};
+        System.out.print("Before Sorting: " );
+        // Using Arrays.toString() for a cleaner way to print the array.
+        System.out.println(Arrays.toString(arr1));
+
+        selectionSort(arr1); // The array is sorted in-place.
+        System.out.println();
+        System.out.println("After Sorting: ");
+        System.out.println(Arrays.toString(arr1));
+
+    }
+}
