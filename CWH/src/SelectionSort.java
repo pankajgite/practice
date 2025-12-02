@@ -20,13 +20,33 @@ public class SelectionSort {
             arr[i]=tmp;
         }
     }
+
+    public static void bubleSort(int[] arr){
+        for(int i=0;i<arr.length;i++){
+            boolean swapped=false;
+            for(int j=0;j<arr.length-i-1;j++){
+                if(arr[j]>arr[j+1]){
+                    int tem =arr[j];
+                    arr[j]=arr[j+1];
+                    arr[j+1]=tem;
+                    swapped=true;
+                }
+
+            }
+            if(swapped==false){
+                break;
+            }
+            
+        }
+    }
+
     public static void main(String[] args) {
         int[] arr1 = {13,46,24,52,20,9};
         System.out.print("Before Sorting: " );
         // Using Arrays.toString() for a cleaner way to print the array.
         System.out.println(Arrays.toString(arr1));
 
-        selectionSort(arr1); // The array is sorted in-place.
+        bubleSort(arr1); // The array is sorted in-place.
         System.out.println();
         System.out.println("After Sorting: ");
         System.out.println(Arrays.toString(arr1));
