@@ -40,13 +40,25 @@ public class SelectionSort {
         }
     }
 
+    public static void insertionSort(int[] arr){
+        for (int i = 1; i < arr.length; i++) {  
+            int j=i;                            
+            while(j>0 && arr[j-1]>arr[j]){      
+                int tmp=arr[j];                 
+                arr[j]=arr[j-1];                
+                arr[j-1]=tmp;                   
+                j--;                            
+            }
+        }
+    }
+
     public static void main(String[] args) {
-        int[] arr1 = {13,46,24,52,20,9};
+        int[] arr1 = {14,9,15,12,6,8,13};
         System.out.print("Before Sorting: " );
         // Using Arrays.toString() for a cleaner way to print the array.
         System.out.println(Arrays.toString(arr1));
 
-        bubleSort(arr1); // The array is sorted in-place.
+        insertionSort(arr1);
         System.out.println();
         System.out.println("After Sorting: ");
         System.out.println(Arrays.toString(arr1));
