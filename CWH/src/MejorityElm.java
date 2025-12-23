@@ -1,6 +1,4 @@
 
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class MejorityElm {
@@ -19,25 +17,53 @@ public class MejorityElm {
         // }
         // return 0;
 
-        HashMap<Integer,Integer> h2= new HashMap<>();
+        // HashMap<Integer,Integer> h2= new HashMap<>();
 
-        for(int i=0;i<nums.length;i++){
-            try {
-                int a=h2.get(nums[i])+1;
-                h2.put(nums[i],a);
-            } catch (Exception e) {
-                h2.put(nums[i],1);
+        // for(int i=0;i<nums.length;i++){
+        //     try {
+        //         int a=h2.get(nums[i])+1;
+        //         h2.put(nums[i],a);
+        //     } catch (Exception e) {
+        //         h2.put(nums[i],1);
+        //     }
+        // }
+        // for (Map.Entry<Integer,Integer> entry: h2.entrySet()) {
+        //     if(entry.getValue()>nums.length/2){
+        //         return entry.getKey();
+        //     }
+        // }
+        // return -1;
+
+        //most voting element 
+        int e=nums[0];
+        int count=1;
+        for(int i=1; i<nums.length;i++){
+            if(count==0){
+                e=nums[i];
+                count=1;
+            }
+            else if(nums[i]==e){
+                count++;
+            }
+            else{
+                count--;
+            }
+            
+        }
+        count=0;
+        for(int i=0; i<nums.length;i++){
+            if(nums[i]==e){
+                count++;
             }
         }
-        for (Map.Entry<Integer,Integer> entry: h2.entrySet()) {
-            if(entry.getValue()>nums.length/2){
-                return entry.getKey();
-            }
+        
+        if(count>nums.length/2){
+            return e;
         }
         return -1;
     }
     public static void main(String[] args) {
-        int[] nums={2,2,1,3,1,1,4,1,1,5,1,1,6};//1,1,1,1,1,1,1,2,2,3,4,5,6
+        int[] nums={2,2,1,1,1,2,2};
         System.out.println(majorityElement(nums));
     }
 }
