@@ -24,14 +24,11 @@ public class MejorityElm {
         for(int i=0;i<nums.length;i++){
             try {
                 int a=h2.get(nums[i])+1;
-                System.out.println("got a:"+a);
                 h2.put(nums[i],a);
             } catch (Exception e) {
                 h2.put(nums[i],1);
             }
         }
-
-        System.out.println(h2);
         for (Map.Entry<Integer,Integer> entry: h2.entrySet()) {
             if(entry.getValue()>nums.length/2){
                 return entry.getKey();
