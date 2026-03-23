@@ -1,7 +1,7 @@
 
 import java.util.Scanner;
 
-public class Tcs20shift1 {
+public class Tcs20shift1q1 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter Number: ");
