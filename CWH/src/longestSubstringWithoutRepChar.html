@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeetCode 3: Longest Substring Visualizer</title>
+    <style>
+        :root {
+            --bg: #0f172a; --card: #1e293b; --accent: #38bdf8;
+            --text: #f1f5f9; --java-keyword: #c678dd; --java-func: #61afef;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 40px; display: flex; flex-direction: column; align-items: center; }
+        .container { max-width: 1100px; width: 100%; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .leetcode-link { color: var(--accent); text-decoration: none; border: 1px solid var(--accent); padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; transition: 0.3s; }
+        .leetcode-link:hover { background: var(--accent); color: white; }
+        
+        .main-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 25px; margin-top: 20px; }
+        .card { background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        
+        .string-display { display: flex; gap: 8px; justify-content: center; margin: 40px 0; }
+        .char-box { width: 50px; height: 50px; border: 2px solid #475569; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; font-weight: 700; border-radius: 8px; position: relative; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .window-active { border-color: var(--accent); background: rgba(56, 189, 248, 0.1); box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); }
+        
+        .pointer { position: absolute; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; padding: 2px 6px; border-radius: 4px; }
+        .left-p { top: -30px; background: #fb923c; color: white; }
+        .right-p { bottom: -30px; background: var(--accent); color: white; }
+
+        .code-block { font-family: 'Fira Code', monospace; font-size: 0.85rem; white-space: pre; line-height: 1.6; }
+        .highlight { background: rgba(255,255,255,0.2); border-left: 3px solid var(--accent); display: block; width: 100%; }
+        
+        .var-table { width: 100%; margin-top: 15px; border-collapse: collapse; }
+        .var-table td { padding: 10px; border-bottom: 1px solid #334155; }
+        .hashmap-chip { display: inline-block; background: #334155; padding: 2px 8px; border-radius: 4px; margin: 2px; font-family: monospace; border: 1px solid #475569; }
+        
+        .controls { margin-bottom: 20px; display: flex; gap: 10px; }
+        button { background: var(--accent); color: var(--bg); border: none; padding: 12px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        button:hover { transform: translateY(-2px); opacity: 0.9; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Longest Substring Without Repeating Characters</h1>
+        <p>Explain the Sliding Window algorithm with real-time memory tracking.</p>
+        <a href="https://leetcode.com/problems/longest-substring-without-repeating-characters/" target="_blank" class="leetcode-link">Try on LeetCode →</a>
+    </div>
+
+    <div class="main-layout">
+        <div class="card">
+            <div class="controls">
+                <button onclick="stepThrough()">Next Execution Step</button>
+                <button onclick="location.reload()" style="background: #475569; color: white;">Reset</button>
+            </div>
+            <div id="status" style="font-size: 1.1rem; margin-bottom: 10px; color: var(--accent); font-weight: 600;">Initialize pointers...</div>
+            
+            <div class="string-display" id="visualizer"></div>
+
+            <div style="margin-top: 40px;">
+                <h3 style="margin-bottom: 10px; border-bottom: 1px solid #334155; padding-bottom: 5px;">Memory & Variables</h3>
+                <table class="var-table">
+                    <tr><td>Max Length:</td><td id="max-val" style="color:var(--accent); font-weight: bold;">0</td></tr>
+                    <tr><td>Window:</td><td id="curr-sub" style="color:#fb923c">-</td></tr>
+                    <tr>
+                        <td style="vertical-align: top;">HashMap:</td>
+                        <td id="map-viz"><em>{ empty }</em></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="card code-block">
+<span id="l1">public int lengthOfLongestSubstring(String s) {</span>
+<span id="l2">  HashMap&lt;Character, Integer&gt; map = new HashMap&lt;&gt;();</span>
+<span id="l3">  int left = 0, max = 0;</span>
+<span id="l4">  for (int right = 0; right < s.length(); right++) {</span>
+<span id="l5">    char c = s.charAt(right);</span>
+<span id="l6">    if (map.containsKey(c)) {</span>
+<span id="l7">      left = Math.max(map.get(c) + 1, left);</span>
+<span id="l8">    }</span>
+<span id="l9">    map.put(c, right);</span>
+<span id="l10">    max = Math.max(max, right - left + 1);</span>
+<span id="l11">  }</span>
+<span id="l12">  return max;</span>
+<span>}</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    const s = "abcabcbb";
+    let left = 0, right = 0, maxLen = 0, step = 4;
+    let map = new Map();
+
+    function updateUI() {
+        // Update Window Pointers
+        const container = document.getElementById('visualizer');
+        container.innerHTML = '';
+        s.split('').forEach((char, i) => {
+            const box = document.createElement('div');
+            box.className = `char-box ${i >= left && i < right ? 'window-active' : ''}`;
+            box.innerText = char;
+            if (i === left) box.innerHTML += '<span class="pointer left-p">Left</span>';
+            if (i === (right - 1)) box.innerHTML += '<span class="pointer right-p">Right</span>';
+            container.appendChild(box);
+        });
+
+        // Update Text Stats
+        document.getElementById('max-val').innerText = maxLen;
+        document.getElementById('curr-sub').innerText = s.substring(left, right) || "-";
+
+        // Update HashMap Visualization
+        const mapViz = document.getElementById('map-viz');
+        if (map.size === 0) {
+            mapViz.innerHTML = "<em>{ empty }</em>";
+        } else {
+            let html = "{ ";
+            map.forEach((val, key) => {
+                html += `<span class="hashmap-chip">'${key}': ${val}</span>`;
+            });
+            html += " }";
+            mapViz.innerHTML = html;
+        }
+    }
+
+    function highlight(id) {
+        document.querySelectorAll('.code-block span').forEach(el => el.classList.remove('highlight'));
+        document.getElementById(id).classList.add('highlight');
+    }
+
+    function stepThrough() {
+        if (right >= s.length && step === 4) {
+            highlight('l12');
+            document.getElementById('status').innerText = "Algorithm Finished!";
+            return;
+        }
+
+        switch(step) {
+            case 4: 
+                highlight('l4'); 
+                document.getElementById('status').innerText = `Iteration for right = ${right}`;
+                step = 5; 
+                break;
+            case 5: 
+                highlight('l5'); 
+                document.getElementById('status').innerText = `Current character: '${s[right]}'`;
+                step = 6; 
+                break;
+            case 6: 
+                highlight('l6'); 
+                if (map.has(s[right])) {
+                    document.getElementById('status').innerText = `Found duplicate '${s[right]}' in Map!`;
+                    step = 7;
+                } else {
+                    document.getElementById('status').innerText = `'${s[right]}' not in Map. Window is safe.`;
+                    step = 9;
+                }
+                break;
+            case 7: 
+                highlight('l7'); 
+                const oldPos = map.get(s[right]);
+                left = Math.max(oldPos + 1, left);
+                document.getElementById('status').innerText = `Jumping 'left' pointer to index ${left}`;
+                step = 9;
+                break;
+            case 9: 
+                highlight('l9'); 
+                map.set(s[right], right); 
+                document.getElementById('status').innerText = `Updating Map: '${s[right]}' now at index ${right}`;
+                step = 10; 
+                break;
+            case 10: 
+                highlight('l10'); 
+                maxLen = Math.max(maxLen, right - left + 1);
+                right++;
+                document.getElementById('status').innerText = `Calculating max length: ${maxLen}`;
+                step = 4; 
+                break;
+        }
+        updateUI();
+    }
+    updateUI();
+    highlight('l3');
+</script>
+</body>
+</html>
